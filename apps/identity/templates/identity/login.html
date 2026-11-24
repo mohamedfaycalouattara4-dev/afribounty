@@ -1,0 +1,24 @@
+{% extends "experience/base.html" %}
+{% block title %}Connexion locale — AfriBounty{% endblock %}
+{% block content %}
+<section class="hero" aria-labelledby="login-title">
+  <p class="eyebrow">Connexion autonome</p>
+  <h1 id="login-title">Se connecter à AfriBounty</h1>
+  <p>Aucun e-mail, SMS, Google, Facebook ou fournisseur externe n’est utilisé. Votre compte est vérifié uniquement par vos secrets locaux et votre appareil de sécurité.</p>
+</section>
+<section class="card warning" aria-labelledby="login-warning-title">
+  <h2 id="login-warning-title">Avant de saisir vos informations</h2>
+  <p>Vérifiez que vous êtes bien sur le domaine AfriBounty. Ne saisissez jamais votre mot de passe ou votre code de récupération dans un lien reçu par message. AfriBounty ne vous demandera jamais de les transmettre au support.</p>
+</section>
+<section class="card" aria-labelledby="login-form-title">
+  <h2 id="login-form-title">Authentification locale</h2>
+  <form method="post" class="stack">
+    {% csrf_token %}
+    <label for="identifier">Identifiant local</label><input id="identifier" name="identifier" autocomplete="username" minlength="3" maxlength="48" required>
+    <label for="password">Mot de passe</label><input id="password" type="password" name="password" autocomplete="current-password" required>
+    <p class="hint">Après vérification du mot de passe, une passkey sera demandée si elle est enregistrée. Les comptes sensibles exigent toujours un second facteur.</p>
+    <button class="button" type="submit">Vérifier mon compte</button>
+  </form>
+  <p class="hint"><a href="/access/recover/">J’ai perdu mes moyens d’accès</a> · <a href="/access/signup/">Créer un compte local</a></p>
+</section>
+{% endblock %}

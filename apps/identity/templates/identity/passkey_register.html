@@ -1,0 +1,10 @@
+{% extends "experience/base.html" %}
+{% load static %}
+{% block title %}Configurer ma clé de sécurité — AfriBounty{% endblock %}
+{% block content %}
+<section class="hero"><p class="eyebrow">Étape 2 — clé de sécurité</p><h1>{% if second_required %}Enregistrer une passkey de secours{% else %}Enregistrer votre passkey{% endif %}</h1><p>Votre appareil va créer une clé cryptographique liée à AfriBounty. La clé privée reste sur votre appareil ; le serveur ne reçoit jamais votre empreinte digitale, votre visage ou votre code PIN.</p></section>
+<section class="card warning"><h2>Vérifiez avant de continuer</h2><p>Utilisez uniquement votre appareil personnel ou une clé FIDO2 que vous contrôlez. N’acceptez pas cette opération sur un ordinateur public ou à la demande d’une autre personne.</p><p>{% if second_required %}Deux passkeys distinctes sont obligatoires pour réduire le risque de perte d’accès. Utilisez un autre appareil ou une autre clé FIDO2.{% else %}La perte de toutes vos clés et de vos codes peut empêcher la récupération automatique du compte.{% endif %}</p></section>
+<section class="card"><form aria-hidden="true" style="display:none">{% csrf_token %}</form><h2>Confirmation requise</h2><p id="auth-status" role="status">Lorsque vous cliquez sur le bouton, votre appareil vous demandera une empreinte, un visage ou un code PIN.</p><button class="button" id="register-passkey" data-auth-action="register" type="button">Je comprends et enregistrer ma passkey</button></section>
+{{ options|json_script:"auth-options" }}
+<script src="{% static 'experience/auth.js' %}" defer></script>
+{% endblock %}

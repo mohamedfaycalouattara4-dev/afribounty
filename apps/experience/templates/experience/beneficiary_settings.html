@@ -1,0 +1,8 @@
+{% extends 'experience/base.html' %}
+{% block title %}Profil de règlement — AfriBounty{% endblock %}
+{% block content %}
+<section class="hero"><p class="eyebrow">Récompenses · validation contrôlée</p><h1>Profil de bénéficiaire</h1><p>Ce formulaire prépare les contrôles de conformité nécessaires au règlement. L’environnement actuel n’est relié à aucun portefeuille, opérateur mobile ou prestataire de paiement et ne déclenche aucun mouvement financier.</p></section>
+{% if profile %}<section class="card"><h2>État actuel</h2><p>Canal de règlement : <strong>{{ profile.provider_code }}</strong> · Statut : <strong>{{ profile.get_verification_status_display }}</strong></p><p>Référence de règlement : <code>{{ profile.recipient_reference }}</code></p></section>{% endif %}
+<section class="card"><h2>Mettre à jour la référence de règlement</h2>{% if step_up_active %}<p class="notice">Votre confirmation renforcée est active pour cette modification.</p>{% else %}<p class="notice">Une confirmation renforcée de sécurité est requise avant l’enregistrement. Aucun SMS, code de paiement ou mouvement financier n’est déclenché dans cet environnement.</p>{% endif %}<form method="post" class="stack">{% csrf_token %}<label for="recipient-reference">Référence de bénéficiaire</label><input id="recipient-reference" name="recipient_reference" maxlength="160" value="{{ profile.recipient_reference|default:'' }}" placeholder="Ex. ref-beneficiaire-001" required><button type="submit">Enregistrer le profil de bénéficiaire</button></form></section>
+<p><a class="button button-secondary" href="{% url 'experience-researcher-dashboard' %}">Retour au tableau de bord</a></p>
+{% endblock %}

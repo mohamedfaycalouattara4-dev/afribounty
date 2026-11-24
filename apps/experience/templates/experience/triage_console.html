@@ -1,0 +1,6 @@
+{% extends 'experience/base.html' %}
+{% block title %}Console triage — AfriBounty{% endblock %}
+{% block content %}
+<section class="hero"><p class="eyebrow">Opérations protégées</p><h1>Console de triage</h1><p>Traitez uniquement les rapports attribués à votre compte. Les décisions restent horodatées et séparées de la validation des récompenses.</p></section>
+{% if reports %}<section class="card"><table><caption>File de triage</caption><thead><tr><th>Rapport</th><th>Programme</th><th>État</th><th>Attribution</th><th></th></tr></thead><tbody>{% for report in reports %}<tr><td>{{ report.title }}</td><td>{{ report.program__name }}</td><td>{{ report.status_label }}</td><td>{% if report.triage_assignment__assigned_to__email %}{{ report.triage_assignment__assigned_to__email }} · {{ report.triage_assignment__queue }}{% else %}Non attribué{% endif %}</td><td><a class="button button-secondary" href="{% url 'experience-triage-report-detail' report_id=report.id %}">Ouvrir</a></td></tr>{% endfor %}</tbody></table></section>{% else %}<p class="empty">Aucun rapport en attente de triage.</p>{% endif %}
+{% endblock %}

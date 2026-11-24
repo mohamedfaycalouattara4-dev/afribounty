@@ -1,0 +1,8 @@
+{% extends 'experience/base.html' %}
+{% block title %}Ma réputation — AfriBounty{% endblock %}
+{% block content %}
+<section class="hero"><p class="eyebrow">Réputation vérifiable</p><h1>Mes saisons, points et classements</h1><p>Les valeurs proviennent exclusivement des événements de réputation append-only déjà validés. Aucun avis, témoignage ou résultat communautaire n’est généré artificiellement.</p></section>
+<section class="card"><h2>Mes profils de saison</h2>{% if profiles %}<table><caption>Calculs les plus récents par saison</caption><thead><tr><th>Saison</th><th>Points</th><th>Rang calculé</th><th>Dernier calcul</th></tr></thead><tbody>{% for profile in profiles %}<tr><td>{{ profile.season.code }}</td><td>{{ profile.points }}</td><td>{{ profile.rank|default:"Non calculé" }}</td><td>{{ profile.recalculated_at }}</td></tr>{% endfor %}</tbody></table>{% else %}<p class="empty">Votre compte ne possède encore aucun profil calculé. Les points apparaissent seulement après un événement validé et un recalcul traçable.</p>{% endif %}</section>
+<section class="card"><h2>Saisons connues</h2>{% if seasons %}<table><caption>Calendrier issu des données réelles de la plateforme</caption><thead><tr><th>Code</th><th>Début</th><th>Fin</th><th>État</th></tr></thead><tbody>{% for season in seasons %}<tr><td>{{ season.code }}</td><td>{{ season.starts_at }}</td><td>{{ season.ends_at }}</td><td>{% if season.active %}Active{% else %}Archivée ou planifiée{% endif %}</td></tr>{% endfor %}</tbody></table>{% else %}<p class="empty">Aucune saison de réputation n’est actuellement définie.</p>{% endif %}</section>
+<p><a class="button button-secondary" href="{% url 'experience-researcher-dashboard' %}">Retour au tableau de bord</a></p>
+{% endblock %}

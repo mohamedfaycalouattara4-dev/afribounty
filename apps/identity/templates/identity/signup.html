@@ -1,0 +1,37 @@
+{% extends "experience/base.html" %}
+{% block title %}Créer un compte local — AfriBounty{% endblock %}
+{% block content %}
+<section class="hero" aria-labelledby="signup-title">
+  <p class="eyebrow">Étape 1 — identité locale</p>
+  <h1 id="signup-title">Créer un compte AfriBounty sans e-mail ni SMS</h1>
+  <p>Votre compte sera protégé par un identifiant local, un mot de passe et une clé de sécurité enregistrée sur votre appareil ou une clé FIDO2.</p>
+</section>
+<section class="card warning" aria-labelledby="warning-title">
+  <h2 id="warning-title">Avertissement important avant de commencer</h2>
+  <p>AfriBounty n’enverra aucun lien de connexion par e-mail et aucun code par SMS. Si vous perdez votre mot de passe, toutes vos passkeys et tous vos codes de récupération, la récupération peut nécessiter une validation administrative ou devenir impossible.</p>
+  <p>Ne partagez jamais votre mot de passe, votre passkey ou vos codes de récupération. Le support ne vous demandera jamais de les communiquer.</p>
+</section>
+<section class="card" aria-labelledby="form-title">
+  <h2 id="form-title">Vos informations locales</h2>
+  <form method="post" class="stack">
+    {% csrf_token %}
+    <fieldset><legend>Type de compte</legend><div class="choice-grid">
+      <label class="choice-card"><input required type="radio" name="account_intent" value="researcher"><span><strong>Chercheur en sécurité</strong>Rechercher et signaler des vulnérabilités autorisées.</span></label>
+      <label class="choice-card"><input required type="radio" name="account_intent" value="organization"><span><strong>Organisation</strong>Créer et gérer des programmes de divulgation responsable.</span></label>
+    </div></fieldset>
+    <label for="identifier">Identifiant local</label>
+    <input id="identifier" name="identifier" autocomplete="username" minlength="3" maxlength="48" pattern="[a-z0-9][a-z0-9._-]{2,47}" required>
+    <p class="hint">3 à 48 caractères : minuscules, chiffres, point, tiret et underscore. Cet identifiant remplacera l’adresse e-mail pour la connexion.</p>
+    <label for="display_name">Nom affiché</label><input id="display_name" name="display_name" autocomplete="name" maxlength="80" required>
+    <label for="country_code">Pays de résidence ou d’activité</label><input id="country_code" name="country_code" autocomplete="country" minlength="2" maxlength="2" placeholder="BF" required>
+    <div id="organization-field"><label for="organization_name">Nom de l’organisation</label><input id="organization_name" name="organization_name" maxlength="180"><p class="hint">Obligatoire pour le rôle Organisation.</p></div>
+    <label for="password">Mot de passe local</label><input id="password" type="password" name="password" autocomplete="new-password" minlength="15" required>
+    <p class="hint">Choisissez une phrase longue et unique. Elle est hachée localement avec Argon2id en production ; elle ne peut pas être récupérée par AfriBounty.</p>
+    <label for="password_confirmation">Confirmer le mot de passe</label><input id="password_confirmation" type="password" name="password_confirmation" autocomplete="new-password" minlength="15" required>
+    <label class="inline-check"><input type="checkbox" name="accepted_rules" required><span>J’accepte les règles d’engagement, la confidentialité et le code de conduite.</span></label>
+    <label class="inline-check"><input type="checkbox" name="acknowledged_recovery" required><span>J’ai compris qu’aucun e-mail ni SMS ne permettra de récupérer automatiquement mon compte, et que les codes hors ligne seront affichés une seule fois.</span></label>
+    <button class="button" type="submit">Créer mon compte et configurer ma clé</button>
+  </form>
+  <p class="hint">Vous avez déjà un compte local ? <a href="/access/login/">Se connecter</a>.</p>
+</section>
+{% endblock %}

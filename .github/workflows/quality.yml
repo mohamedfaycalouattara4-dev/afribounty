@@ -1,0 +1,84 @@
+name: AfriBounty quality gates
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    name: Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.12", "3.13"]
+    env:
+      DJANGO_SETTINGS_MODULE: config.settings.development
+      IDENTITY_TOTP_FERNET_KEY: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Installer les dépendances verrouillées
+        run: python -m pip install -r requirements.lock -r requirements-dev.lock
+      - name: Vérifier les migrations
+        run: python manage.py makemigrations --check --dry-run
+      - name: Vérifier la compilation Python
+        run: python -m compileall -q apps config tests tools
+      - name: Lint
+        run: ruff check .
+      - name: Vérifier le formatage
+        run: ruff format --check .
+      - name: Vérifier la syntaxe du client WebAuthn
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Contrôler le JavaScript d’authentification
+        run: node --check apps/experience/static/experience/auth.js
+      - name: Tests Django
+        run: python manage.py test tests -v 2
+      - name: Contrôle de livraison
+        run: python3 tools/verify_zip08.py
+      - name: Audit des dépendances
+        run: pip-audit -r requirements.lock
+      - name: Rechercher les artefacts interdits
+        shell: bash
+        run: |
+          ! find . -type f \( -name '*.sqlite3' -o -name '*.db' -o -name '*.pyc' \) -print -quit | grep -q .
+          ! find . -type f \( -name '.env' -o -name '.env.production' \) -print -quit | grep -q .
+      - name: Vérifier le profil de production sans connexion fournisseur
+        env:
+          DJANGO_SETTINGS_MODULE: config.settings.production
+          DJANGO_DEBUG: "0"
+          DJANGO_SECRET_KEY: 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-strong
+          DJANGO_ALLOWED_HOSTS: app.example.bf
+          DJANGO_CSRF_TRUSTED_ORIGINS: https://app.example.bf
+          AFRIBOUNTY_AUTH_RP_ID: app.example.bf
+          AFRIBOUNTY_AUTH_ORIGIN: https://app.example.bf
+          DJANGO_DATABASE_URL: postgresql://afribounty:placeholder@postgres.internal:5432/afribounty
+          DJANGO_REDIS_URL: rediss://:placeholder@redis.internal:6380/0
+          AFRIBOUNTY_ENVIRONMENT: production
+          AFRIBOUNTY_EVIDENCE_STORAGE_BACKEND: private-object
+          EVIDENCE_SCAN_REQUIRED: "1"
+          EVIDENCE_ENCRYPTION_KEY: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
+          METRICS_AUTH_TOKEN: 0123456789abcdefghijklmnopqrstuvwxyz
+          AUDIT_INTEGRITY_KEY: 0123456789abcdefghijklmnopqrstuvwxyz-audit
+          DJANGO_EMAIL_BACKEND: django.core.mail.backends.smtp.EmailBackend
+        run: python manage.py check --deploy
+
+  container:
+    name: Build production image
+    runs-on: ubuntu-latest
+    needs: quality
+    steps:
+      - uses: actions/checkout@v4
+      - name: Construire l’image de production
+        run: docker build --pull --tag afribounty:ci .
+      - name: Vérifier que l’image n’embarque pas une base locale
+        run: test -z "$(docker run --rm --entrypoint sh afribounty:ci -c 'find /app -maxdepth 2 -type f \( -name "*.sqlite3" -o -name "*.db" \) -print')"

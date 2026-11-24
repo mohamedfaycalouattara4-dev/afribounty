@@ -1,0 +1,3 @@
+{% extends 'experience/base.html' %}
+{% block title %}Vérifiez votre e-mail — AfriBounty{% endblock %}
+{% block content %}<section class="hero"><p class="eyebrow">Lien envoyé</p><h1>Vérifiez votre e-mail</h1><p>Si cette adresse est valide, un lien de {{ mode }} à usage unique a été préparé pour <strong>{{ email }}</strong>.</p><p>Dans cette instance locale, l’e-mail est écrit dans la console du serveur uniquement. En production, il sera envoyé via un fournisseur transactionnel configuré et audité.</p><p><a class="button" href="/">Retour au portail</a></p></section>{% endblock %}

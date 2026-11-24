@@ -1,0 +1,5 @@
+{% extends 'experience/base.html' %}
+{% block title %}{{ page.title }} — AfriBounty{% endblock %}
+{% block content %}
+<p class="eyebrow">Informations de confiance</p><article class="card"><h1>{{ page.title }}</h1><p>{{ page.body|linebreaksbr }}</p>{% if is_default %}<p class="notice">Version de référence fournie par l’instance locale. Une page publiée par l’administration peut la remplacer après validation humaine.</p>{% endif %}</article><p><a href="{% url 'experience-home' %}">Retour au portail</a></p>
+{% endblock %}

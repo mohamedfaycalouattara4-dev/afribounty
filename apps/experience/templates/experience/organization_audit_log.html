@@ -1,0 +1,6 @@
+{% extends 'experience/base.html' %}
+{% block title %}Journal d’audit — AfriBounty{% endblock %}
+{% block content %}
+<p class="eyebrow">Traçabilité organisationnelle</p><h1>Journal d’audit de {{ organization.name }}</h1><p>Ce registre présente les 200 derniers événements de cette organisation. Les contenus de rapports, preuves et données d’autres organisations ne sont pas affichés.</p>
+<section class="card">{% if events %}<table><caption>Événements récents</caption><thead><tr><th>Date</th><th>Action</th><th>Acteur</th><th>Métadonnées sûres</th></tr></thead><tbody>{% for event in events %}<tr><td>{{ event.created_at|date:"d F Y H:i" }}</td><td><code>{{ event.action }}</code></td><td>{% if event.actor %}{{ event.actor.email }}{% else %}Système local{% endif %}</td><td><code>{{ event.metadata }}</code></td></tr>{% endfor %}</tbody></table>{% else %}<p class="empty">Aucun événement organisationnel n’est encore disponible.</p>{% endif %}</section><p><a href="{% url 'experience-organization-dashboard' organization.id %}">Retour à l’espace organisation</a></p>
+{% endblock %}

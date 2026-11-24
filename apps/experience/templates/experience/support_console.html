@@ -1,0 +1,6 @@
+{% extends 'experience/base.html' %}
+{% block title %}Console support — AfriBounty{% endblock %}
+{% block content %}
+<p class="eyebrow">Opérations protégées</p><h1>Console support locale</h1><p>Les tickets ne donnent jamais accès aux preuves de rapports ou à des secrets.</p>
+{% for case in cases %}<section class="card"><h2>{{ case.subject }}</h2><p>Demandeur : {{ case.requester.email }} · État : <strong>{{ case.get_status_display }}</strong></p><p>{{ case.sanitized_message|linebreaksbr }}</p>{% for reply in case.replies.all %}<p><strong>{{ reply.author.email }}</strong> — {{ reply.created_at|date:"d F Y H:i" }}<br>{{ reply.sanitized_message|linebreaksbr }}</p>{% endfor %}<form method="post">{% csrf_token %}<input type="hidden" name="case_id" value="{{ case.id }}"><label for="status-{{ case.id }}">Statut</label><select id="status-{{ case.id }}" name="status"><option value="open"{% if case.status == 'open' %} selected{% endif %}>Ouvert</option><option value="closed"{% if case.status == 'closed' %} selected{% endif %}>Fermé</option></select><label for="reply-{{ case.id }}">Réponse sans contenu sensible</label><textarea id="reply-{{ case.id }}" name="reply" rows="4" maxlength="4000"></textarea><button type="submit">Mettre à jour le ticket</button></form></section>{% empty %}<p class="empty">Aucun ticket de support local.</p>{% endfor %}
+{% endblock %}

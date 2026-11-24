@@ -1,0 +1,9 @@
+{% extends 'experience/base.html' %}
+{% block title %}Support local — AfriBounty{% endblock %}
+{% block content %}
+<p class="eyebrow">Assistance séparée des rapports</p>
+<h1>Centre de support</h1>
+<p>Utilisez ce canal pour les questions de compte et d’utilisation. Les vulnérabilités, secrets, preuves ou contenus d’exploitation doivent rester dans un rapport autorisé.</p>
+<section class="card"><h2>Ouvrir un ticket local</h2><form method="post">{% csrf_token %}<label for="subject">Objet</label><input id="subject" name="subject" maxlength="180" required><label for="message">Question ou demande</label><textarea id="message" name="message" rows="5" maxlength="4000" required></textarea><p class="hint">Ne partagez jamais de mot de passe, token, secret, preuve ou exploit dans ce canal.</p><button type="submit">Ouvrir le ticket</button></form></section>
+<section class="card"><h2>Mes tickets</h2>{% for case in cases %}<article><h3>{{ case.subject }}</h3><p>État : <strong>{{ case.get_status_display }}</strong> · Ouvert le {{ case.created_at|date:"d F Y H:i" }}</p><p>{{ case.sanitized_message|linebreaksbr }}</p>{% for reply in case.replies.all %}<p><strong>Réponse support</strong> — {{ reply.created_at|date:"d F Y H:i" }}<br>{{ reply.sanitized_message|linebreaksbr }}</p>{% empty %}<p class="hint">Aucune réponse pour le moment.</p>{% endfor %}</article>{% empty %}<p class="empty">Aucun ticket local ouvert.</p>{% endfor %}</section>
+{% endblock %}

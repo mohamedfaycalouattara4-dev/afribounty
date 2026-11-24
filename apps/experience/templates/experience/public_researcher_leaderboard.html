@@ -1,0 +1,5 @@
+{% extends 'experience/base.html' %}
+{% block title %}Classement chercheurs — AfriBounty{% endblock %}
+{% block content %}
+<p class="eyebrow">Communauté opt-in</p><h1>Classement public des chercheurs</h1><p>Seuls les chercheurs ayant choisi explicitement une visibilité publique et disposant de points calculés à partir d’événements locaux apparaissent ici.</p>{% if rankings %}<section class="card"><table><caption>Profils publics actifs</caption><thead><tr><th>Alias</th><th>Saison</th><th>Points</th><th>Rang</th></tr></thead><tbody>{% for item in rankings %}<tr><td>{{ item.user.public_researcher_profile.public_alias }}</td><td>{{ item.season.code }}</td><td>{{ item.points }}</td><td>{{ item.rank|default:"—" }}</td></tr>{% endfor %}</tbody></table></section>{% else %}<section class="card"><h2>Aucun profil public éligible</h2><p>Les profils non opt-in ou sans réputation calculée restent privés.</p></section>{% endif %}
+{% endblock %}

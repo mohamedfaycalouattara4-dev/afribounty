@@ -1,0 +1,8 @@
+{% extends 'experience/base.html' %}
+{% block title %}Analyses opérationnelles — AfriBounty{% endblock %}
+{% block content %}
+<p class="eyebrow">Données locales agrégées</p><h1>Analyses de {{ organization.name }}</h1><p>Les indicateurs portent exclusivement sur cette organisation et sont calculés à partir des enregistrements locaux existants.</p>
+<div class="grid"><article class="card"><h2>Rapports</h2><p>{{ reports_total }}</p></article><article class="card"><h2>Décisions</h2><p>{{ decisions_total }}</p></article><article class="card"><h2>Remédiations</h2><p>{{ remediation_verified }} vérifiée(s) sur {{ remediation_total }}</p></article></div>
+<section class="card"><h2>Répartition des rapports par état</h2>{% if status_rows %}<table><thead><tr><th>État</th><th>Nombre</th></tr></thead><tbody>{% for row in status_rows %}<tr><td>{{ row.label }}</td><td>{{ row.total }}</td></tr>{% endfor %}</tbody></table>{% else %}<p class="empty">Aucun rapport local dans cette organisation.</p>{% endif %}</section>
+<section class="card"><h2>Suivi par programme</h2>{% if program_rows %}<table><thead><tr><th>Programme</th><th>Rapports</th><th>Remédiations</th><th>Résolus</th></tr></thead><tbody>{% for row in program_rows %}<tr><td>{{ row.name }}</td><td>{{ row.reports_total }}</td><td>{{ row.remediation_total }}</td><td>{{ row.resolved_total }}</td></tr>{% endfor %}</tbody></table>{% else %}<p class="empty">Aucun programme local disponible.</p>{% endif %}</section><p><a href="{% url 'experience-organization-dashboard' organization.id %}">Retour à l’espace organisation</a></p>
+{% endblock %}

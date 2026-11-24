@@ -1,0 +1,7 @@
+{% extends "experience/base.html" %}
+{% block title %}Conserver mes codes de récupération — AfriBounty{% endblock %}
+{% block content %}
+<section class="hero"><p class="eyebrow">Étape 3 — sauvegarde hors ligne</p><h1>Conservez vos codes maintenant</h1><p>Ces codes sont affichés une seule fois. Ils sont le seul moyen automatique de récupérer votre compte si vous perdez votre passkey.</p></section>
+<section class="card danger"><h2>Ne quittez pas cette page avant d’avoir sécurisé les codes</h2><p>AfriBounty ne les enverra ni par e-mail ni par SMS. Ne les copiez pas dans un message, une capture d’écran synchronisée ou un gestionnaire non protégé. Imprimez-les ou conservez-les dans un coffre hors ligne.</p><p>Chaque code ne peut être utilisé qu’une seule fois. Toute personne qui les possède peut tenter de récupérer votre compte.</p></section>
+<section class="card recovery-codes" aria-labelledby="codes-title"><h2 id="codes-title">Vos codes — à conserver hors ligne</h2><ol>{% for code in recovery_codes %}<li><code>{{ code }}</code></li>{% endfor %}</ol><form method="post" action="/onboarding/" class="stack">{% csrf_token %}<label class="inline-check"><input type="checkbox" name="codes_saved" required><span>J’ai imprimé ou conservé ces codes dans un emplacement hors ligne sécurisé.</span></label><button class="button" type="submit">J’ai sécurisé mes codes</button></form></section>
+{% endblock %}

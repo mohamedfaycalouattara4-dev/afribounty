@@ -1,0 +1,6 @@
+{% extends "experience/base.html" %}
+{% block title %}Intégrité locale — AfriBounty{% endblock %}
+{% block content %}
+<section class="hero"><p class="eyebrow">Lecture seule</p><h1>Vérification consolidée d’intégrité locale</h1><p>Cette page regroupe les compteurs de contrôles locaux. Elle ne révèle aucun dossier, secret ou preuve, ne répare aucune divergence et n’appelle aucun fournisseur externe.</p></section>
+<section class="stack"><article class="card"><h2>État global</h2><p>{% if integrity.valid %}<strong>Conforme</strong> : les contrôles locaux regroupés ne signalent pas de divergence.{% else %}<strong>À diagnostiquer</strong> : au moins un contrôle local signale une divergence. Aucune correction automatique n’est effectuée.{% endif %}</p></article><article class="card"><h2>Contrôles agrégés</h2><table><thead><tr><th>Contrôle</th><th>Éléments contrôlés</th><th>État</th><th>Compteurs non sensibles</th></tr></thead><tbody>{% for check in integrity_checks %}<tr><td>{{ check.code }}</td><td>{{ check.checked_count }}</td><td>{% if check.valid %}Conforme{% else %}À diagnostiquer{% endif %}</td><td>{{ check.metrics }}</td></tr>{% empty %}<tr><td colspan="4">Aucun contrôle local enregistré.</td></tr>{% endfor %}</tbody></table></article></section>
+{% endblock %}

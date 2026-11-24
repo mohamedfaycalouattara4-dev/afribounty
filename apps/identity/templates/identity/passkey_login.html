@@ -1,0 +1,10 @@
+{% extends "experience/base.html" %}
+{% load static %}
+{% block title %}Vérifier ma clé — AfriBounty{% endblock %}
+{% block content %}
+<section class="hero"><p class="eyebrow">Étape 2 — preuve locale</p><h1>Confirmer votre identité</h1><p>Votre appareil va signer une demande pour AfriBounty. La signature est vérifiée par le serveur ; aucune empreinte, image de visage ou code PIN ne quitte votre appareil.</p></section>
+<section class="card warning"><h2>Ne validez que votre propre demande</h2><p>Si une fenêtre de sécurité apparaît alors que vous n’avez pas lancé cette connexion, annulez-la immédiatement. Ne validez jamais une demande dictée par un tiers.</p></section>
+<section class="card"><form aria-hidden="true" style="display:none">{% csrf_token %}</form><p id="auth-status" role="status">Compte local : <strong>{{ identifier }}</strong></p><button class="button" id="login-passkey" data-auth-action="login" type="button">Je reconnais cette demande et je vérifie ma passkey</button><p class="hint"><a href="/access/login/">Annuler et recommencer</a></p></section>
+{{ options|json_script:"auth-options" }}
+<script src="{% static 'experience/auth.js' %}" defer></script>
+{% endblock %}
